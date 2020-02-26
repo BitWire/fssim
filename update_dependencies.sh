@@ -26,7 +26,7 @@ printf "\n\n"
 ###############################################
 # Update the binary dependencies using rosdep #
 ###############################################
-read -p "Do you want to install/update the projects dependencies of FSSIM(Y/n)? " -n 1 -r
+REPLY = y
 echo
 if [[ $REPLY =~ ^[Yy]$ ]] || [ -z $REPLY ]; then
     PKG_OK=$(dpkg-query -W --showformat='${Status}\n' git-lfs|grep "install ok installed")
@@ -39,6 +39,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [ -z $REPLY ]; then
     		sudo apt install git-lfs
     	fi
     fi
+    source "${ABSOLUTE_PATH}/fssim/setup.py"
     # Place our AMZ dependencies in the rosdep sources folder
     printf "\n\nCopying FSSIM's ROS dependency list to rosdep sources folder\n"
     printf "Target folder: ${ROSDEP_SOURCES_TARGET}\n"
@@ -50,7 +51,6 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [ -z $REPLY ]; then
     sudo apt-get update
     # Update rosdep
     rosdep update
-
     # Install the dependencies
     rosdep install --from-paths "${ABSOLUTE_PATH}/" -r -i -y || { printf "[${red}ROSDEP FAILED${end}]\n" ;}
     
